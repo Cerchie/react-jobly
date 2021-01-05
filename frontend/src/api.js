@@ -13,13 +13,31 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 class JoblyApi {
   // the token for interactive with the API will be stored here.
   static token;
-
+//function for making a request to the API
   static async request(endpoint, data = {}, method = "get") {
     console.debug("API Call:", endpoint, data, method);
 
     const url = `${BASE_URL}/${endpoint}`;
     const headers = { Authorization: `Bearer ${JoblyApi.token}` };
     const params = (method === "get")
+        ? data
+        : {};
+
+    try {
+      return (await axios({ url, method, data, params, headers })).data;
+    } catch (err) {
+      console.error("API Error:", err.response);
+      let message = err.response.data.error.message;
+      throw Array.isArray(message) ? message : [message];
+    }
+  }
+
+  static async post(endpoint, data = {}, method = "post") {
+    console.debug("API Call:", endpoint, data, method);
+
+    const url = `${BASE_URL}/${endpoint}`;
+    const headers = { Authorization: `Bearer ${JoblyApi.token}` };
+    const params = (method === "post")
         ? data
         : {};
 
@@ -40,11 +58,37 @@ class JoblyApi {
     let res = await this.request(`companies/${handle}`);
     return res.company;
   }
+  /** Get details on all companies. */
+  static async getAllCompanies() {
+    let res = await this.request(`companies/`);
+    return res.companies;
+  }
 
-  // obviously, you'll add a lot here ...
+    /** Get details on all jobs. */
+    static async getAllJobs() {
+      let res = await this.request(`jobs/`);
+      return res.jobs;
+    }
+
+  static async postCompany(data) {
+    let res = await this.post(`companies/`, data);
+    return res.companies;
+  }
+
+  static async getJob(id) {
+    let res = await this.request(`jobs/${id}`);
+    return res.company;
+  }
+
+  static async postJob(data) {
+    let res = await this.post(`jobs/`, data);
+    return res.companies;
+  }
 }
 
 // for now, put token ("testuser" / "password" on class)
 JoblyApi.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZ" +
     "SI6InRlc3R1c2VyIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU5ODE1OTI1OX0." +
     "FtrMwBQwe6Ue-glIFgz_Nf8XxRT2YecFCiSpYL0fCXc";
+
+export default JoblyApi;
