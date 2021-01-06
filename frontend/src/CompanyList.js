@@ -9,13 +9,12 @@ import {
   CardBody,
   CardTitle,
   CardText,
-  ListGroup,
-  ListGroupItem
+  ListGroup
 } from "reactstrap";
 import {v4 as uuid} from 'uuid';
 
-function CompanyList({companiesProps}){
-    console.debug("CompanyList:", companiesProps);
+function CompanyList(){
+
 
     const [companies, setCompanies] = useState(null);
   
@@ -28,9 +27,13 @@ function CompanyList({companiesProps}){
     async function search(name) {
       let companies = await JoblyApi.searchCompanies(name);
       setCompanies(companies);
+      console.debug("CompanyList", companies);
     }
+
+    if (!companies) return 'no companies';
+
     return (
-        <section className="col-md-4">
+        <section className="CompanyList col-md-4">
             <Search searchFor={search} />
       <Card>
         <CardBody>
@@ -43,9 +46,9 @@ function CompanyList({companiesProps}){
             bulk of the card's content. 
           </CardText>
           <ListGroup>
-          {companiesProps.map(company => (
+          {companies.map(company => (
               <Link to={`/companies/${company.handle}`} key={company.id}>
-                <ListGroupItem>{company.name}</ListGroupItem>
+                <CompanyCard company={company}/>
               </Link>
             ))};
           </ListGroup>

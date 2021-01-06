@@ -11,9 +11,11 @@ import {
 } from "reactstrap";
 import {v4 as uuid} from 'uuid';
 
-function CompanyCard({companies}){
+function CompanyCard({company, companies}){
     const { handle } = useParams();
-    let company = companies.find(company => company.handle === handle);
+    if (handle)
+   { 
+    let company = companies.find(company => company.handle === handle); 
     return (
         <section className="col-md-4">
       <Card>
@@ -27,7 +29,21 @@ function CompanyCard({companies}){
         </CardBody>
       </Card>
     </section>
-    )
+    ) }
+    return (
+      <section className="col-md-4">
+    <Card>
+      <CardBody>
+        <CardTitle className="font-weight-bold text-center">
+         {company.name}
+        </CardTitle>
+        <CardText>
+          {company.description}
+        </CardText>
+      </CardBody>
+    </Card>
+  </section>
+  )
 }
 
 export default CompanyCard;

@@ -66,7 +66,7 @@ class JoblyApi {
     /** Search for a company by handle. */
 
     static async searchCompanies(name) {
-      let res = await this.request("companies", { name } );
+      let res = await this.request(`companies`,{ name });
       return res.companies;
     }
  
