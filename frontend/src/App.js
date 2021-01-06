@@ -76,16 +76,7 @@ function App() {
     }
   }
 
-  async function updateUser(newData) {
-    try {
-      let token = await JoblyApi.saveProfile(newData);
-      setToken(token);
-      return { success: true };
-    } catch (errors) {
-      console.error("login failed", errors);
-      return { success: false, errors };
-    }
-  }
+
   /** Handles site-wide logout. */
   function logout() {
     setCurrentUser(null);
@@ -147,7 +138,7 @@ if (currentUser)
               <Signup signupUser={signupUser}/>
             </Route>
             <Route exact path="/profile">
-              <Profile updateUser={updateUser}/>
+              <Profile />
             </Route>
             <Route>
               <p>Hmmm. This page seems to be missing.</p>
