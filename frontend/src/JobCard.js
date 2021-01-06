@@ -27,6 +27,7 @@ function JobCard({jobs}){
           </CardTitle>
           <CardText>
             {job.company_handle}
+            {job.equity}
             {job.salary}
           </CardText>
         </CardBody>

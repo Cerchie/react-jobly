@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Redirect } from "react-router-dom";
 import { Route, Switch } from "react-router-dom";
 import NavBar from './NavBar';
 import Home from './Home';
@@ -30,8 +30,10 @@ function App() {
       setJobs(jobs);
       setIsLoading(false);
     }
+  
     getCompanies();
     getJobs();
+ 
   }, []);
 
   if (isLoading) {
@@ -40,6 +42,7 @@ function App() {
 
   return (
 <div className="App">
+  
       <BrowserRouter>
         <NavBar />
         <main>
@@ -48,7 +51,7 @@ function App() {
               <Home />
             </Route>
             <Route exact path="/companies">
-              <CompanyList companies={companies}/>
+            <CompanyList companiesProps={companies}/>
             </Route>
             <Route exact path="/companies/:handle">
               <CompanyCard companies={companies}/>
@@ -71,6 +74,7 @@ function App() {
             <Route>
               <p>Hmmm. This page seems to be missing.</p>
             </Route>
+            <Redirect to="/" />
           </Switch>
         </main>
       </BrowserRouter>

@@ -135,6 +135,34 @@ class Company {
     return company;
   }
 
+  static async search(term) {
+    const companyRes = await db.query(
+          `SELECT handle,
+                  name,
+                  description,
+                  num_employees AS "numEmployees",
+                  logo_url AS "logoUrl"
+           FROM companies
+           WHERE handle ILIKE $1`,
+        [`%${term}%`]);
+
+    const company = companyRes.rows[0];
+
+    if (!company) throw new NotFoundError(`No company found like: ${term}`);
+
+    const jobsRes = await db.query(
+          `SELECT id, title, salary, equity
+           FROM jobs
+           WHERE company_handle ILIKE $1
+           ORDER BY id`,
+        [`%${term}%`],
+    );
+
+    company.jobs = jobsRes.rows;
+
+    return company;
+  }
+
   /** Update company data with `data`.
    *
    * This is a "partial update" --- it's fine if data doesn't contain all the
@@ -171,6 +199,7 @@ class Company {
 
     return company;
   }
+
 
   /** Delete given company from database; returns undefined.
    *
