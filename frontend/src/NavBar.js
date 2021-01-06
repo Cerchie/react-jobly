@@ -26,7 +26,7 @@ function loggedInNav() {
     <div>
       <Navbar expand="md">
         <NavLink exact to="/" className="navbar-brand">
-         Welcome {currentUser.name}!
+         Welcome {currentUser.username}!
         </NavLink>
         <Nav className="ml-auto" navbar>
           <NavItem>
@@ -34,12 +34,6 @@ function loggedInNav() {
           </NavItem>
           <NavItem>
             <NavLink to="/jobs">Jobs</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink to="/login">Login</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink to="/signup">Signup</NavLink>
           </NavItem>
           <NavItem>
             <NavLink to="/profile">Profile</NavLink>

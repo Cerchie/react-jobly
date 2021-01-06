@@ -55,6 +55,8 @@ function App() {
     try {
       let token = await JoblyApi.signup(signupData);
       setToken(token);
+      let currentUser = await JoblyApi.getCurrentUser(signupData.username);
+      setCurrentUser(currentUser);
       return { success: true };
     } catch (errors) {
       console.error("signup failed", errors);
