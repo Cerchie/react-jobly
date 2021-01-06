@@ -5,7 +5,7 @@ import {
     CardTitle,
     CardText
   } from "reactstrap";
-function Profile() {
+function Profile({updateUser}) {
   return (
     <Card>
         <CardTitle>TITLE</CardTitle>

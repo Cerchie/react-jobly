@@ -12,14 +12,16 @@ import Signup from './Signup';
 import Profile from './Profile'
 import JoblyApi from './api'
 import UserContext from "./UserContext";
+import useLocalStorage from "./useLocalStorage";
 import jwt from "jsonwebtoken";
 
 import './App.css';
 
+export const TOKEN_STORAGE_ID = "jobly-token";
 
 function App() {
   //USER AUTH FUNCTIONS
-  const [token, setToken] = useState([]);
+  const [token, setToken] = useLocalStorage(TOKEN_STORAGE_ID);
   const [infoLoaded, setInfoLoaded] = useState(false);
   const [currentUser, setCurrentUser] = useState(null)
   const [applicationIds, setApplicationIds] = useState(new Set([]));
@@ -73,6 +75,17 @@ function App() {
       return { success: false, errors };
     }
   }
+
+  async function updateUser(newData) {
+    try {
+      let token = await JoblyApi.saveProfile(newData);
+      setToken(token);
+      return { success: true };
+    } catch (errors) {
+      console.error("login failed", errors);
+      return { success: false, errors };
+    }
+  }
   /** Handles site-wide logout. */
   function logout() {
     setCurrentUser(null);
@@ -103,8 +116,8 @@ function App() {
   if (isLoading) {
     return <p>Loading &hellip;</p>;
   }
-
-  return (
+if (currentUser)
+  { return (
 <div className="App">
   
     <BrowserRouter>
@@ -134,7 +147,7 @@ function App() {
               <Signup signupUser={signupUser}/>
             </Route>
             <Route exact path="/profile">
-              <Profile />
+              <Profile updateUser={updateUser}/>
             </Route>
             <Route>
               <p>Hmmm. This page seems to be missing.</p>
@@ -145,7 +158,35 @@ function App() {
         </UserContext.Provider >
       </BrowserRouter>
     </div>
-  );
+  );}
+
+  return (
+    <div className="App">
+      
+        <BrowserRouter>
+          <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+            <NavBar logout={logout} />
+            <main>
+              <Switch>
+                <Route exact path="/">
+                  <Home />
+                </Route>
+                <Route exact path="/login">
+                  <Login login={loginUser}/>
+                </Route>
+                <Route exact path="/signup">
+                  <Signup signupUser={signupUser}/>
+                </Route>
+                <Route>
+                  <p>Hmmm. This page seems to be missing.</p>
+                </Route>
+                <Redirect to="/" />
+              </Switch>
+            </main>
+            </UserContext.Provider >
+          </BrowserRouter>
+        </div>
+      );
 }
 
 export default App;
