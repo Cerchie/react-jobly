@@ -1,49 +1,50 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Redirect, useParams } from "react-router-dom";
-import Api from "./api";
+import JobList from "./JobList";
+import JoblyApi from "./api";
 import "./styles.css";
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  CardText
-} from "reactstrap";
-import {v4 as uuid} from 'uuid';
+import { Card, CardBody, CardTitle, CardText } from "reactstrap";
+import { v4 as uuid } from "uuid";
 
-function CompanyCard({company, companies}){
-    const { handle } = useParams();
-    if (handle)
-   { 
-    let company = companies.find(company => company.handle === handle); 
-    return (
-        <section className="col-md-4">
+function CompanyCard({ company, companies }) {
+  const { handle } = useParams();
+  const [stateCompany, setStateCompany] = useState(null);
+
+  useEffect(
+    function getCompanyAndJobsForUser() {
+      async function getCompany() {
+        setStateCompany(await JoblyApi.getCompany(handle));
+      }
+
+      getCompany();
+    },
+    [handle],
+  );
+
+  if (!stateCompany) {
+    return <p>loading..</p>;
+  }
+  // let company = companies.find(company => company.handle === handle);
+  console.log("company =", company);
+  // jobs where company.handle = handle
+  return (
+    <section className="col-md-4">
       <Card>
         <CardBody>
           <CardTitle className="font-weight-bold text-center">
-           {company.name}
+            {stateCompany.name}
           </CardTitle>
-          <CardText>
-            {company.description}
-          </CardText>
+          <CardText>{stateCompany.description}</CardText>
+          {/* 
+           lodash used to have a useful, verbose way of doing this
+           nullish coalescing operator https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator
+           optional chaining https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining*/}
+          <JobList jobs={stateCompany?.jobs ?? []} />
         </CardBody>
       </Card>
     </section>
-    ) }
-    return (
-      <section className="col-md-4">
-    <Card>
-      <CardBody>
-        <CardTitle className="font-weight-bold text-center">
-         {company.name}
-        </CardTitle>
-        <CardText>
-          {company.description}
-        </CardText>
-      </CardBody>
-    </Card>
-  </section>
-  )
+  );
 }
 
 export default CompanyCard;
