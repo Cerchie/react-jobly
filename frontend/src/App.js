@@ -139,9 +139,6 @@ if (currentUser)
             <Route exact path="/jobs">
               <JobList jobs={jobs}/>
             </Route>
-            <Route exact path="/jobs/:id">
-              <JobCard jobs={jobs} applyToJob={applyToJob}/>
-            </Route>
             <Route exact path="/login">
               <Login login={loginUser}/>
             </Route>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Api from "./api";
 import JobCard from './JobCard'
 import "./styles.css";
+
 import {
   Card,
   CardBody,
@@ -27,9 +28,7 @@ function JobList({jobs}){
               </CardText>
               <ListGroup>
               {jobs.map(job => (
-                  <Link to={`/jobs/${job.id}`}>
-                    <JobCard title={job.title} id={job.id} salary={job.salary} equity={job.equity} company_handle={job.company_handle}></JobCard>
-                  </Link>
+                    <JobCard key={uuid()} title={job.title} id={job.id} salary={job.salary} equity={job.equity} ></JobCard>
                 ))};
               </ListGroup>
               <ListGroup>
