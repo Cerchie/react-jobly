@@ -102,6 +102,10 @@ class JoblyApi {
     return res.companies;
   }
 
+// apply to job
+  static async applyToJob(username, id){
+    await this.request(`${username}/jobs/${id}`, {}, "post")
+  }
   /** Signup for site. */
 
   static async signup(data) {

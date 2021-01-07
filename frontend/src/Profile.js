@@ -1,7 +1,6 @@
 import React, {useState, useContext} from "react";
 import JoblyApi from './api'
 import UserContext from "./UserContext";
-
 import { useHistory } from "react-router-dom";
 
 
