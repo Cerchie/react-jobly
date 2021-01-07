@@ -76,6 +76,17 @@ function App() {
     }
   }
 
+  /** Checks if a job has been applied for. */
+  function hasAppliedToJob(id) {
+    return applicationIds.has(id);
+  }
+
+  /** Apply to a job: make API call and update set of application IDs. */
+  function applyToJob(id) {
+    if (hasAppliedToJob(id)) return;
+    JoblyApi.applyToJob(currentUser.username, id);
+    setApplicationIds(new Set([...applicationIds, id]));
+  }
 
   /** Handles site-wide logout. */
   function logout() {
@@ -112,7 +123,7 @@ if (currentUser)
 <div className="App">
   
     <BrowserRouter>
-      <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+      <UserContext.Provider value={{ currentUser, setCurrentUser, hasAppliedToJob, applyToJob }}>
         <NavBar logout={logout} />
         <main>
           <Switch>
@@ -123,13 +134,13 @@ if (currentUser)
             <CompanyList companiesProps={companies}/>
             </Route>
             <Route exact path="/companies/:handle">
-              <CompanyCard companies={companies}/>
+              <CompanyCard companies={companies} applyToJob={applyToJob} hasAppliedToJob={hasAppliedToJob}/>
             </Route>
             <Route exact path="/jobs">
               <JobList jobs={jobs}/>
             </Route>
             <Route exact path="/jobs/:id">
-              <JobCard jobs={jobs}/>
+              <JobCard jobs={jobs} applyToJob={applyToJob}/>
             </Route>
             <Route exact path="/login">
               <Login login={loginUser}/>

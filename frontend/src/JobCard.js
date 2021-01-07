@@ -1,6 +1,6 @@
-import React from "react";
-import { Redirect, useParams } from "react-router-dom";
-import Api from "./api";
+import React, {useContext, useState} from "react";
+import {  useParams } from "react-router-dom";
+import UserContext from "./UserContext";
 import "./styles.css";
 import {
   Card,
@@ -8,27 +8,41 @@ import {
   CardTitle,
   CardText
 } from "reactstrap";
-import {v4 as uuid} from 'uuid';
 
-function JobCard({jobs}){
-    console.log(jobs)
-    const { id } = useParams();
-    let job = jobs.find(job => job === job);
-    console.log(job)
-    if (!job){
-       return ('Job not found');
-    } 
+
+function JobCard({id, title, salary, company_handle, equity}){
+ 
+  console.debug("JobCard");
+
+  const { hasAppliedToJob, applyToJob } = useContext(UserContext);
+  const [applied, setApplied] = useState();
+
+  React.useEffect(function updateAppliedStatus() {
+    console.debug("JobCard useEffect updateAppliedStatus", "id=", id);
+
+    setApplied(hasAppliedToJob(id));
+  }, [id, hasAppliedToJob]);
+
+  /** Apply for a job */
+  async function handleApply(evt) {
+    if (hasAppliedToJob(id)) return;
+    applyToJob(id);
+    setApplied(true);
+  }
+
+
     return (
         <section className="col-md-4">
       <Card>
         <CardBody>
           <CardTitle className="font-weight-bold text-center">
-           {job.title}
+           {title}
           </CardTitle>
           <CardText>
-            {job.company_handle}
-            {job.equity}
-            {job.salary}
+            {company_handle}
+            {equity}
+            {salary}
+            <button onClick={handleApply}>Apply to Job</button>
           </CardText>
         </CardBody>
       </Card>

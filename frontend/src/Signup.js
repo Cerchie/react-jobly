@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { useHistory } from "react-router-dom";
-//TODO integrate function from app in handlsubmit
+
 const Signup = ({signupUser}) => {
   const history = useHistory();
 const INITIAL_STATE = {

@@ -28,7 +28,7 @@ function JobList({jobs}){
               <ListGroup>
               {jobs.map(job => (
                   <Link to={`/jobs/${job.id}`}>
-                    <ListGroupItem> title: {job.title}, salary: {job.salary}</ListGroupItem>
+                    <JobCard title={job.title} id={job.id} salary={job.salary} equity={job.equity} company_handle={job.company_handle}></JobCard>
                   </Link>
                 ))};
               </ListGroup>
